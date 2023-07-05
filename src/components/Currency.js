@@ -1,71 +1,57 @@
-import React, { useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
-//import "./StyleCurrency.css" ;
+import Select from 'react-select';
+
 const Currency = (props) => {
-  const [ currency,setCurrency ] = useState('');
-  const { dispatch, } = useContext(AppContext);
-  // const [name, setName] = useState('');
-    
-  /*
-  const changeCurrency = (val)=>{
-            dispatch({
-                type: 'SET_CURRENCY',
-                payload: val,
-            })
-    }
-  */
-  const updateCurrency = (event) => {
-    /*console.log(currency+"....A..."+event.target.value);
-    */
+  const [currency, setCurrency] = useState('');
+  const { dispatch } = useContext(AppContext);
+
+  const updateCurrency = (selectedOption) => {
     dispatch({
-          type: 'CHG_CURRENCY',
-          payload: event.target.value,
-        });
-    setCurrency(event.target.value);
-    return;
-  }
+      type: 'CHG_CURRENCY',
+      payload: selectedOption.value,
+    });
+    setCurrency(selectedOption.value);
+  };
+
+  const currencyOptions = [
+    { value: '£', label: '£ Pound' },
+    { value: '$', label: '$ Dollar' },
+    { value: '€', label: '€ Euro' },
+    { value: '₹', label: '₹ Rupee' },
+  ];
+
+  const customStyles = {
+    control: (provided) => ({
+      ...provided,
+      backgroundColor: '#14A44D',
+      borderColor: '#14A44D',
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isFocused ? 'white' : '#14A44D',
+      color: 'black',
+    }),
+    menu: (provided) => ({
+      ...provided,
+      backgroundColor: '#14A44D',
+    }),
+  };
+
   return (
-    <div className='alert alert-secondary'>  
-    <span>
-    <label style={{marginLeft: '1rem' , backgroundColor:'#118A00', color:'white'}} >
-     Currency {
-      <select 
-        className='btn btn-success dropdown-toggle'
-        id='currency'
-        onChange={(event) =>updateCurrency(event)}>Currency ({currency})
-          <option value='£'>£ Pound</option>
-          <option value='$'>$ Dollar</option>
-          <option value='€'>€ Euro</option>
-          <option value='₹'>₹ Rupee</option>
-      </select>
-        }
-    </label>
-      </span>
+    <div className='alert alert-secondary'>
+      <label style={{ marginLeft: '1rem', backgroundColor: '#14A44D', color: 'black' }}>
+        Currency
+      </label>
+      <Select
+        className='currency-select'
+        options={currencyOptions}
+        value={currencyOptions.find((option) => option.value === currency)}
+        onChange={updateCurrency}
+        styles={customStyles}
+      />
     </div>
-
-
-
   );
 };
-/*
-export default Currency;
-  return (
-        <div className='alert alert-secondary'>
-            <label style={{marginLeft: '1rem' , backgroundColor:'#33FF49', color:'white'}} >
-                Currency {
-                <select
-                name="hover_color"
-                id="Currency"
-                onChange={(event) => changeCurrency(event.target.value)}
-                style={{ marginLeft: '1rem' , backgroundColor:'#33FF49', color:'white'}}>
-                <option style={{color:'black'}} value="£">(£) Pound</option>
-                <option style={{color:'black'}} value="₹">(₹) Ruppee</option>
-                <option style={{color:'black'}} value="€">(€) Euro</option>
-                <option style={{color:'black'}} value="$">($) Dollar</option>
-                </select>
-            }</label>	
-        </div>
-    );
-};
-*/
+
 export default Currency;
